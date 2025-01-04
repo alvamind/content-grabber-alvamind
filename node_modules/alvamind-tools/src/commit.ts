@@ -6,6 +6,61 @@ import * as path from 'path';
 import * as readline from 'readline';
 import chalk from 'chalk';
 
+// Add default gitignore content
+const defaultGitignore = `# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Production
+/build
+/dist
+
+# Misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity`;
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -31,6 +86,16 @@ async function isGhInstalled(): Promise<boolean> {
   }
 }
 
+// Add function to create gitignore
+function createGitignore() {
+  const gitignorePath = path.join(projectDir, '.gitignore');
+  if (!fs.existsSync(gitignorePath)) {
+    console.log(chalk.yellow('ℹ️  Creating default .gitignore file...'));
+    fs.writeFileSync(gitignorePath, defaultGitignore);
+    console.log(chalk.green('✅ Created .gitignore file'));
+  }
+}
+
 async function commitAndPush() {
   if (!commitMessage) {
     console.error(chalk.red('❌ Commit message is required.'));
@@ -48,7 +113,13 @@ async function commitAndPush() {
       console.log(chalk.yellow('⚠️  No git repository found. Initializing...'));
       execSync('git init', { stdio: 'inherit' });
       console.log(chalk.green('✅ Git repository initialized.'));
+
+      // Create .gitignore for new repositories
+      createGitignore();
     }
+
+    // Check for .gitignore even in existing repositories
+    createGitignore();
 
     // Stage and commit changes first
     const status = execSync('git status --porcelain').toString();
