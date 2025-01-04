@@ -1,0 +1,59 @@
+{
+  "name": "retry-util-alvamind",
+  "version": "1.0.0",
+  "author": "Alvamind",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alvamind/retry-util-alvamind.git"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "devDependencies": {
+    "bun-types": "^1.1.42",
+    "rimraf": "^5.0.10",
+    "typescript": "^5.7.2"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "description": "A utility for retrying async operations",
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "index.d.ts"
+  ],
+  "keywords": [
+    "retry",
+    "async",
+    "utility",
+    "exponential backoff",
+    "alvamind"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "source": "generate-source output=source.md exclude=dist/,README.md,nats-rpc.test.ts,rpc-nats-alvamind-1.0.0.tgz,.gitignore",
+    "split-code": "split-code source=all-in-one.ts markers=src/,custom/ outputDir=./output",
+    "dev": "bun run src/index.ts --watch",
+    "build": "tsc && tsc -p tsconfig.build.json",
+    "clean-dist": "rimraf dist",
+    "prebuild": "npm run clean"
+  },
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@types/node-fetch": "^2.6.12",
+    "alvamind-tools": "^1.0.13",
+    "canvas": "^3.0.1",
+    "csv-parser": "^3.1.0",
+    "mammoth": "^1.9.0",
+    "node-fetch": "^3.3.2",
+    "pdfjs-dist": "^4.10.38",
+    "tesseract.js": "^5.1.1",
+    "xlsx": "^0.18.5"
+  }
+}
