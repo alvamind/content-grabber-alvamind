@@ -9,9 +9,10 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "devDependencies": {
-    "bun-types": "^1.1.42",
+    "@types/bun": "^1.1.16",
+    "bun-types": "^1.1.43",
     "rimraf": "^5.0.10",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "exports": {
     ".": {
@@ -36,18 +37,21 @@
   ],
   "license": "MIT",
   "scripts": {
-    "source": "generate-source output=source.md exclude=dist/,README.md,nats-rpc.test.ts,rpc-nats-alvamind-1.0.0.tgz,.gitignore",
-    "split-code": "split-code source=all-in-one.ts markers=src/,custom/ outputDir=./output",
     "dev": "bun run src/index.ts --watch",
     "build": "tsc && tsc -p tsconfig.build.json",
     "clean-dist": "rimraf dist",
-    "prebuild": "npm run clean"
+    "prebuild": "npm run clean",
+    "commit": "commit",
+    "clean": "clean",
+    "split-code": "split-code source=source.md markers=src/ outputDir=./source.md",
+    "publish-npm": "publish-npm patch",
+    "source": "generate-source output=source.md exclude=test/file,node_modules/,.git/"
   },
   "type": "module",
   "types": "dist/index.d.ts",
   "dependencies": {
     "@types/node-fetch": "^2.6.12",
-    "alvamind-tools": "^1.0.14",
+    "alvamind-tools": "^1.0.22",
     "canvas": "^3.0.1",
     "csv-parser": "^3.1.0",
     "mammoth": "^1.9.0",

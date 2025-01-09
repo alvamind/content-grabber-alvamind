@@ -1,8 +1,16 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["test", "dist", "scripts"],
   "compilerOptions": {
+    "noEmit": false,
+    "outDir": "dist",
     "declaration": true,
-    "outDir": "./dist"
-  }
+    "sourceMap": true,
+    "module": "CommonJS",
+    "target": "ES2019",
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": false,
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*", "test/**/*.ts"],
+  "exclude": ["test", "dist", "node_modules"]
 }
