@@ -40,6 +40,10 @@ export class FileContentExtractor {
   }
 
   private async processFileContent(buffer: Buffer, contentType: string): Promise<string> {
+    if (!buffer || buffer.length === 0) {
+      throw new CustomError(new Error('Empty or invalid file content'));
+    }
+
     const contentProcessors: Record<string, () => Promise<string>> = {
       'text/plain': () => new TextProcessor().extract(buffer),
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document': async () =>

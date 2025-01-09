@@ -8,5 +8,6 @@ export const fetchFileContent = async (fileUrl: string, options?: import('./file
 
 export interface FileContentExtractionOptions {
   // ... any options you want to define ...
+  pdfOptions?: import('./processors/pdf-processor').PdfExtractionOptions;
   headers?: Record<string, string>;
 }

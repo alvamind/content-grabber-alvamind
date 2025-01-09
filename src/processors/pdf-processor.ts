@@ -5,6 +5,7 @@ import { CustomError } from '../exceptions/custom-error.exception';
 import { Logger } from '../logger';
 import { GlobalWorkerOptions } from 'pdfjs-dist';
 
+
 // Types
 interface TextContent {
   items: Array<TextItem | TextMarkedContent>;
@@ -40,7 +41,6 @@ const DEFAULT_PDF_OPTIONS: PdfExtractionOptions = {
   minTextLength: 50,
 };
 
-// Initialize PDF.js worker
 GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 export class PdfProcessor {
@@ -68,6 +68,7 @@ export class PdfProcessor {
 
       return normalText;
     } catch (error) {
+      this.logger.error('Error during PDF processing:', error);
       throw new CustomError(
         new Error(`Failed to parse PDF: ${error instanceof Error ? error.message : 'Unknown error'}`),
       );
@@ -76,7 +77,19 @@ export class PdfProcessor {
 
   private async extractNormalText(buffer: Buffer): Promise<string> {
     try {
-      const pdf = await pdfjsLib.getDocument(new Uint8Array(buffer)).promise;
+      if (!buffer || buffer.length === 0) {
+        throw new Error('Invalid PDF buffer');
+      }
+
+      const loadingTask = pdfjsLib.getDocument({
+        data: new Uint8Array(buffer),
+        useWorkerFetch: false,
+        isEvalSupported: false,
+        disableFontFace: true
+      });
+
+      const pdf = await loadingTask.promise;
+
       const textPromises = Array.from({ length: pdf.numPages }, async (_, i) => {
         const page = await pdf.getPage(i + 1);
         const content = (await page.getTextContent()) as TextContent;
@@ -86,7 +99,7 @@ export class PdfProcessor {
       return (await Promise.all(textPromises)).join('\n').trim();
     } catch (error) {
       this.logger.error('Failed to extract normal PDF text:', error);
-      return '';
+      throw new CustomError(error as Error);
     }
   }
 
