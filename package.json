@@ -1,10 +1,10 @@
 {
-  "name": "retry-util-alvamind",
+  "name": "content-grabber-alvamind",
   "version": "1.0.0",
   "author": "Alvamind",
   "repository": {
     "type": "git",
-    "url": "https://github.com/alvamind/retry-util-alvamind.git"
+    "url": "https://github.com/alvamind/content-grabber-alvamind.git"
   },
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -21,7 +21,7 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "description": "A utility for retrying async operations",
+  "description": "A Node.js library to extract text content from various file types. 💪",
   "files": [
     "dist",
     "src",

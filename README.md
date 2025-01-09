@@ -1,249 +1,207 @@
+# 🗂️ content-grabber-alvamind
 
-# 🔁 Simple retry-util 🚀
+[![NPM Version](https://img.shields.io/npm/v/content-grabber-alvamind)](https://www.npmjs.com/package/content-grabber-alvamind)
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
-[![npm version](https://badge.fury.io/js/retry-util-alvamind.svg)](https://badge.fury.io/js/retry-util-alvamind)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Tests](https://img.shields.io/badge/tests-10%20passing-brightgreen)
-[![npm downloads](https://img.shields.io/npm/dm/retry-util-alvamind)](https://www.npmjs.com/package/retry-util-alvamind)
-[![GitHub stars](https://img.shields.io/github/stars/alvamind/retry-util-alvamind?style=social)](https://github.com/alvamind/retry-util-alvamind)
-[![GitHub forks](https://img.shields.io/github/forks/alvamind/retry-util-alvamind?style=social)](https://github.com/alvamind/retry-util-alvamind)
+A Node.js library to extract text content from various file types. 💪
 
-**Your Reliable Companion for Handling Transient Failures in Asynchronous Operations.** 🛡️
+## ✨ Features
 
-A battle-tested and meticulously crafted utility library designed to provide a robust, flexible, and easy-to-use solution for retrying asynchronous operations. `retry-util-alvamind` comes with configurable exponential backoff, allowing your applications to gracefully recover from temporary hiccups, such as network glitches, server overload, or third-party API rate limits. It’s more than just a retry mechanism; it's a reliability powerhouse. ⚡
+*   **Versatile File Support**: Extracts text from `.txt`, `.pdf`, `.docx`, `.csv`, and `.xlsx` files. 📄
+*   **Local & Remote Files**: Works with both local file paths and URLs. 🌐
+*   **Intelligent Content Type Handling**: Automatically detects content types from headers and file extensions. 🤔
+*   **PDF Text Extraction**: Extracts text from PDF files, with optional OCR support. 🧐
+*   **Configurable OCR**: Control OCR behavior (scale, languages). ⚙️
+*  **Customizable Logging**: Supports custom logger for info, error and debug messages. 🪵
+*   **Error Handling**: Provides descriptive error messages. ⚠️
+*   **Easy to Use**: Simple API for quick integration into your projects. 🚀
 
-## ✨ Features and Benefits - Deep Dive
+## 🎯 Benefits
 
--   **Simplicity at Its Core:** The API is straightforward, requiring minimal setup. Start retrying operations in minutes with just a few lines of code. 🧰 No complex configurations or steep learning curves.
--   **Highly Configurable:** Tailor the retry behavior to perfectly match your needs with options for maximum retries, initial delay, exponential backoff factor, and maximum delay. You have full control over the retry strategy. ⚙️
--   **Exponential Backoff with Precision:** Implement exponential backoff effortlessly. This approach prevents hammering the server with retries in short intervals, reducing server load, and increasing the chance of success. 📈 The delay smartly grows with each failure, until max delay is reached.
--   **Intuitive Retry Callback:** Get detailed insights into every retry attempt with the `onRetry` callback. Use it for logging, monitoring, or executing custom logic to prepare the environment before a retry. 🔔 This is essential for debugging and maintaining control over the process.
--   **Handles a Wide Range of Errors:**  `retry-util-alvamind` doesn’t discriminate—it handles both standard JavaScript `Error` objects and custom error types. We make sure no error is left behind.  🚫🐛
--   **Light as a Feather:** Enjoy zero dependencies, making it easy to integrate into any project without adding unnecessary bulk. This keeps your project lean and fast. 💨
--   **TypeScript Ready:** Fully built with TypeScript and providing clear type definitions. Get the benefits of static typing, enabling more robust and maintainable code. ✅ Enjoy compile-time safety and excellent IDE support.
--   **Thoroughly Tested:** Confidence is built-in with our comprehensive test suite, which covers a wide array of scenarios to ensure your peace of mind and application stability. 💯 The library is rigorously tested, leaving no room for doubt.
--   **Bun Test Compatibility:** We utilize the blazingly fast Bun Test runner, integrating seamlessly into modern JavaScript workflows. 🐇 It’s not just tested; it’s *Bun Tested*.
--    **Async Functionality:** Designed specifically for async operations, the library fits in naturally with contemporary JavaScript practices, ensuring compatibility and ease of use with `async/await` patterns. ⚙️
--   **Error Propagation:**  When retries are exhausted, the original error (including its instance type) is thrown, not a generic error, simplifying error handling in your code. This ensures all error contexts are preserved. ⚠️
+*   **Simplify Data Extraction**: Quickly grab text from different file types. ⏱️
+*   **Save Time**: No need to handle file formats manually. ⏳
+*   **Improve Productivity**: Focus on processing text rather than parsing files. 📈
+*   **Reliable**: Robust and well-tested. ✅
 
-## 📦 Installation - Multiple Ways
+## 📦 Installation
 
 ```bash
-npm install retry-util-alvamind
+npm install content-grabber-alvamind
 ```
 
-or with yarn:
+## 🛠️ Usage
 
-```bash
-yarn add retry-util-alvamind
-```
-
-or if you prefer pnpm:
-
-```bash
-pnpm add retry-util-alvamind
-```
-
-Choose your package manager and install the library quickly and smoothly.
-
-## ⚙️ Detailed Usage Examples
-
-### Basic Example with Default Settings
+### Basic Example
 
 ```typescript
-import { RetryUtil, RetryConfigInterface } from 'retry-util-alvamind';
+import { fetchFileContent } from 'content-grabber-alvamind';
 
-const fetchData = async () => {
-    // Assume this fetch operation can fail
-    const response = await fetch('https://api.example.com/data');
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response.json();
-};
-
-const retryConfig: RetryConfigInterface = {
-    maxRetries: 3,
-    initialDelay: 200,
-    factor: 1.5,
-    maxDelay: 1500
-};
-
-RetryUtil.withRetry(fetchData, retryConfig)
-    .then(data => console.log('Data fetched:', data))
-    .catch(error => console.error('Failed to fetch data:', error));
-```
-
-### With the `onRetry` Callback for Logging
-
-```typescript
-import { RetryUtil, RetryConfigInterface } from 'retry-util-alvamind';
-
-const processFile = async (filename: string) => {
-    console.log(`Attempting to process file: ${filename}`);
-    const random = Math.random();
-      if (random < 0.5) {
-        throw new Error(`Failed to process file: ${filename}`);
-    }
-    return `File ${filename} processed successfully!`;
-};
-
-const retryConfig: RetryConfigInterface = {
-    maxRetries: 5,
-    initialDelay: 100,
-    factor: 2,
-    maxDelay: 1000
-};
-
-const onRetry = (attempt: number, error: Error) => {
-  console.warn(`Processing failed (attempt ${attempt}): ${error.message}. Retrying in ${retryConfig.initialDelay * Math.pow(retryConfig.factor, attempt-1)}ms...`);
-};
-
-RetryUtil.withRetry(() => processFile('my_data.txt'), retryConfig, onRetry)
-    .then(result => console.log('Result:', result))
-    .catch(error => console.error('Processing failed:', error));
-```
-
-### Handling Custom Error Types
-
-```typescript
-import { RetryUtil, RetryConfigInterface } from 'retry-util-alvamind';
-
-class CustomError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = 'CustomError';
-    }
+async function main() {
+  try {
+    const fileUrl = 'path/to/your/document.pdf'; // Replace with your file URL/path
+    const extractedContent = await fetchFileContent(fileUrl);
+    console.log(extractedContent);
+  } catch (error) {
+    console.error('Error:', error);
+  }
 }
 
-const flakyOperation = async () => {
-  const random = Math.random();
-    if (random < 0.7) {
-      throw new CustomError('Flaky operation failed!');
-    }
-  return 'Flaky operation completed.';
-};
-
-const retryConfig: RetryConfigInterface = {
-    maxRetries: 2,
-    initialDelay: 50,
-    factor: 3,
-    maxDelay: 500
-};
-
-RetryUtil.withRetry(flakyOperation, retryConfig)
-    .then(result => console.log('Result:', result))
-    .catch(error => {
-        console.error('Operation failed with:', error);
-        if (error instanceof CustomError) {
-            console.log('Custom error was thrown:', error.name);
-        }
-    });
+main();
 ```
 
-## 🧪 In-Depth Test Analysis
+### PDF with OCR
 
-The library is rigorously tested using Bun Test, a modern and ultra-fast JavaScript test runner. Here’s a breakdown of the tests:
+```typescript
+import { fetchFileContent } from 'content-grabber-alvamind';
 
+async function main() {
+    try {
+      const fileUrl = 'path/to/your/scanned_document.pdf';
+      const extractedContent = await fetchFileContent(fileUrl, {
+          pdfOptions: {
+              ocrEnabled: true, // Enable OCR for scanned PDFs
+              languages: ['eng', 'spa'], // Specify OCR languages
+              scale: 2.5 // increase scale for better OCR quality
+          }
+      });
+      console.log(extractedContent);
+  } catch (error) {
+      console.error("Error:", error);
+  }
+}
+
+main();
 ```
-bun test v1.1.42 (50eec002)
 
-test/retry.test.ts:
-✓ should succeed on first attempt [1.00ms]
-✓ should succeed after one retry [102.00ms]
-✓ should fail after max retries [305.00ms]
-✓ should respect maxDelay configuration [304.00ms]
-✓ should call onRetry callback for each retry [303.00ms]
-✓ should handle zero retries configuration [1.00ms]
-✓ should handle async operations with varying delays [203.00ms]
-✓ should apply exponential backoff [302.00ms]
-✓ should handle non-Error throws [311.00ms]
-✓ should preserve error instance type [303.00ms]
+### Custom Logger Example
 
- 10 pass
- 0 fail
- 15 expect() calls
-Ran 10 tests across 1 files. [2.15s]
+```typescript
+import { fetchFileContent, FileContentExtractionOptions } from 'content-grabber-alvamind';
+
+class CustomLogger {
+  info(message: string, ...args: any[]): void {
+    console.log(`[CUSTOM INFO] ${message}`, ...args);
+  }
+
+  error(message: string, ...args: any[]): void {
+    console.error(`[CUSTOM ERROR] ${message}`, ...args);
+  }
+
+  debug(message: string, ...args: any[]): void {
+     console.debug(`[CUSTOM DEBUG] ${message}`, ...args);
+  }
+}
+
+
+async function main() {
+  try {
+    const fileUrl = 'path/to/your/document.txt';
+      const options: FileContentExtractionOptions = {
+          logger: new CustomLogger()
+      }
+    const extractedContent = await fetchFileContent(fileUrl, options);
+    console.log(extractedContent);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+main();
 ```
 
--   **`should succeed on first attempt`:**  Verifies that if the operation succeeds on the first try, no retries occur. 🥇
--   **`should succeed after one retry`:**  Ensures that the operation succeeds after a single retry attempt if the initial call fails. 🥈
--   **`should fail after max retries`:**  Confirms that the library throws the error if the operation fails after all allowed retries. 🥉
--   **`should respect maxDelay configuration`:**  Tests if the maximum delay is correctly respected in the retry logic, preventing delays beyond a certain limit. ⏱️
--   **`should call onRetry callback for each retry`:**  Verifies that the `onRetry` callback is invoked as expected for each retry attempt, allowing proper error logging and handling. 🔔
--   **`should handle zero retries configuration`:**  Tests the behavior when `maxRetries` is set to 0, ensuring the operation is executed only once without retries. 0️⃣
--   **`should handle async operations with varying delays`:** Confirms that the library works seamlessly with async operations that have different delay profiles. ⏳
--  **`should apply exponential backoff`:** This test confirms that the delay between retries grows exponentially as configured. 📈
--   **`should handle non-Error throws`:** Makes sure the library correctly captures and propagates non-Error throws, maintaining error context. ⚠️
--   **`should preserve error instance type`:**  Verifies that the library maintains the original type of the error when throwing it after all retries have failed. This is crucial for proper error handling. 🧰
+### DOCX Extraction
+```typescript
+import { fetchFileContent } from 'content-grabber-alvamind';
 
-## 🗺️ Detailed Roadmap - Looking Ahead
+async function main() {
+  try {
+    const fileUrl = 'path/to/your/document.docx'; // Replace with your file URL/path
+    const extractedContent = await fetchFileContent(fileUrl);
+    console.log(extractedContent);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
 
-Here's what we're planning for the future of `retry-util-alvamind`:
+main();
+```
 
--   [ ] **Jitter Implementation:**  Adding random jitter to the backoff delays to prevent synchronized retries and further reduce server load. This feature will be highly configurable. 🎲
--   [ ] **Circuit Breaker Pattern:**  Introduce a circuit breaker pattern to stop calling failing services for a period of time. This can help a service to recover faster and avoid cascading failures. ⚙️
--   [ ] **Retry Cancellation:** Implement a cancellation mechanism to allow you to stop an ongoing retry operation programmatically if needed. 🚫
--   [ ] **Enhanced Documentation:**  Expanding the current documentation with more in-depth examples, use cases, and best practices. 📚
--   [ ] **Customizable onRetry Limit:** Adding an option to limit the number of times `onRetry` is invoked for better control. 🔔
--   [ ] **Advanced Error Handling:** Investigate more sophisticated error handling mechanisms, such as custom error mapping and recovery strategies. 🧰
--   [ ] **Metrics Integration:**  Add hooks to expose metrics and insights about the retry behavior that you can monitor using systems like Prometheus or Grafana.📊
--    [ ] **Improved Testing with Mocking**: Improve test coverage by adding more sophisticated testing, such as more robust mocking strategies. 🧪
--   [ ] **Support for Abort Signals**: Add support for abort signals to further control the retry operations and cancel retries through a signal. 🚦
+### CSV Extraction
+```typescript
+import { fetchFileContent } from 'content-grabber-alvamind';
 
-### Detailed Checklist:
+async function main() {
+  try {
+    const fileUrl = 'path/to/your/data.csv'; // Replace with your file URL/path
+    const extractedContent = await fetchFileContent(fileUrl);
+    console.log(extractedContent);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
 
--   [x] Initial version published.
--   [x] Basic retry functionality implemented.
--   [x] Exponential backoff included.
--   [x] `onRetry` callback available.
--   [x] Comprehensive tests added.
--   [ ] Jitter implementation is on the roadmap and actively being explored.
--   [ ] Circuit breaker design is under active consideration for integration.
--   [ ] Cancellation implementation is planned and in progress.
--   [ ] Enhanced documentation is continuously being updated.
--   [ ] Customizable onRetry Limit is being planned for implementation.
--   [ ] Advanced error handling and custom error mapping are under investigation.
--   [ ] Metrics integration is planned for implementation.
--   [ ] Improved testing with mocking is being actively worked on.
--    [ ] Support for Abort Signals will be implemented.
+main();
+```
 
-## 🤝 Contributing - Getting Involved
+### Excel Extraction
+```typescript
+import { fetchFileContent } from 'content-grabber-alvamind';
 
-We highly appreciate any contribution to `retry-util-alvamind`! Here's how you can contribute:
+async function main() {
+  try {
+    const fileUrl = 'path/to/your/data.xlsx'; // Replace with your file URL/path
+    const extractedContent = await fetchFileContent(fileUrl);
+    console.log(extractedContent);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
 
-1.  **Fork the Repository:** Start by forking the repository to your own GitHub account.
-2.  **Create a New Branch:** Create a new branch specifically for your changes: `git checkout -b feature-or-fix`.
-3.  **Implement Your Changes:** Add your desired features, enhancements, or bug fixes.
-4.  **Write Comprehensive Tests:** Make sure to add tests to cover the changes you made.
-5.  **Run All Tests:**  Ensure all tests are passing: `npm test` or `yarn test`.
-6.  **Commit Your Changes:**  Commit your changes with a clear and descriptive message using Conventional Commits. Example: `git commit -m "feat: add jitter to backoff"`.
-7.  **Push to Your Branch:** Push your branch to your fork: `git push origin feature-or-fix`.
-8.  **Create a Pull Request:** Create a pull request from your branch to the main repository.
+main();
+```
 
-Please make sure to follow our code style and conventions. Also, add a clear explanation of what the PR is doing.
+### API
 
-## 💖 Donation - Support the Development
+#### `fetchFileContent(fileUrl: string, options?: FileContentExtractionOptions): Promise<string>`
 
-If you find this library helpful, please consider supporting its development and maintenance. Here are a few ways you can contribute:
+*   **`fileUrl` (string)**: The URL or local file path of the document to extract text from.
+*   **`options` (object, optional)**: An object containing optional configurations:
+    *   **`pdfOptions` (object, optional)**: Configuration for PDF extraction:
+        *   **`ocrEnabled` (boolean, optional)**: Enable OCR extraction. Default `true`.
+        *   **`scale` (number, optional)**: Scale factor for OCR image. Default `2.0`.
+        *   **`languages` (string[], optional)**: Array of OCR languages (e.g., `['eng', 'spa']`). Default `['eng']`.
+        *    **`minTextLength` (number, optional)**: Minimum length of normal text to consider using OCR. Default `50`.
+    *  **`logger`**: Custom logger object that implements `info`, `error` and `debug` methods
+*   **Returns**: A `Promise` that resolves with the extracted text content or throws an error.
 
--   ⭐ **Star the Repository:** Give us a star on GitHub to show your support.
--   📢 **Share:** Share `retry-util-alvamind` with your friends, colleagues, and the community on social media or other platforms.
-*   **GitHub Sponsors:** [Link to GitHub Sponsors](https://github.com/sponsors/alvamind)
-*   **Buy us a coffee:** [Link to donation page](https://www.buymeacoffee.com/alvamind)
+## 🛣️ Roadmap
 
-## 📜 License - Open Source
+*   [ ] Support for more file types (e.g., `.odt`, `.rtf`).
+*   [ ] Improved OCR accuracy and performance.
+*   [ ] Configurable text extraction strategies.
+*   [ ] Add unit tests.
+*   [ ] More advanced logging options.
 
-This project is open source and available under the [MIT License](LICENSE). Feel free to use, modify, and distribute this library as per the license terms.
+## 🤝 Contributing
 
-## ⚠️ Disclaimer - Use at Your Own Risk
+Contributions are welcome! Feel free to submit issues, feature requests, and pull requests on [GitHub](https://github.com/alvamind/content-grabber-alvamind). 🙏
 
-This library is provided "as is," without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement. In no event shall the authors or copyright holders be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software. Please use it responsibly and at your own risk. 🙏
+Here’s how you can help:
+*   Report bugs. 🐛
+*   Suggest new features. 💡
+*   Improve documentation. ✍️
+*   Submit code changes. 💻
 
-## 🧑‍💻 Author - Contact Info
+## 💖 Support the Project
 
-[Alvamind](https://github.com/alvamind)
+If you find this project useful, consider supporting its development!  You can contribute through:
 
-Please feel free to contact me via email at [alvaminddigital@gmail.com](mailto:alvaminddigital@gmail.com) for any questions, feedback, or collaboration opportunities.
+*   **GitHub Sponsors**: ⭐️ [Link to GitHub Sponsors]
+*   **Donations**: 💰 [Link to Donation Platform]
 
-**Thank you for exploring `retry-util-alvamind`! I hope it helps you build more reliable and robust applications. Happy coding! 🎉**
+Your support keeps this project going! 🙌
+
+## 📄 License
+
+[MIT](https://opensource.org/licenses/MIT)
